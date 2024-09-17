@@ -1,0 +1,23 @@
+.list-nav:hover .nav-list{
+    cursor: pointer;
+visibility: visible;
+}
+.nav-list{
+    visibility: hidden;
+}
+
+
+/* Add this to your global styles or a specific stylesheet */
+
+.visible {
+    width: 250px;
+  }
+  
+  .hidden {
+    width: 0;
+  }
+  
+  .main-content {
+    transition: margin-left 0.3s;
+  }
+  

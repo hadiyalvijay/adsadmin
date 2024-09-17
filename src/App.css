@@ -1,0 +1,14 @@
+.scroll-container {
+    overflow-x: hidden;
+    white-space: nowrap;
+    transition: transform 0.5s ease;
+  }
+  
+  .scroll-container.scrolling-left {
+    transform: translateX(-100%);
+  }
+  
+  .scroll-container.scrolling-right {
+    transform: translateX(100%);
+  }
+  
