@@ -1,7 +1,10 @@
 import React from "react";
+import Sidebar from "./Sidebar";
+
 
 const SubSidebar = ({ isVisible = true }) => { // Use the isVisible prop to control visibility
   return (
+  <>
     <aside
       className={`py-3 ${isVisible ? 'd-block' : 'hidden'}`} // Toggle display based on isVisible
       style={{
@@ -10,8 +13,9 @@ const SubSidebar = ({ isVisible = true }) => { // Use the isVisible prop to cont
         height: "100%",
         marginLeft: "75px",
         width: isVisible ? "200px" : "0",
-        transition: "width 0.2s",
-        overflowY: "auto", // Allow scrolling when content overflows
+        transition: "width 0.1s", // Speed up transition
+        overflowY: "auto", 
+
       }}
     >
       <div className="container">
@@ -32,6 +36,7 @@ const SubSidebar = ({ isVisible = true }) => { // Use the isVisible prop to cont
         </div>
       </div>
     </aside>
+  </>
   );
 };
 

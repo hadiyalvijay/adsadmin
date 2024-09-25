@@ -135,59 +135,59 @@ const employeeData = [
 const Cards = () => {
   return (
     <>
-      <div className="mt-5 d-flex flex-wrap justify-content-between" style={{ width: "auto",}}>
-        {employeeData.map((employee, index) => (
-          <Card key={index} style={{ width: "18rem", marginBottom: "1rem" }}>
-            <div className="text-center">
-              <div className="mt-3">
-                <Card.Img
-                  className="rounded-circle"
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    objectFit: "cover",
-                    border: "1px solid blue",
-                    padding: "5px" // Added padding to create space between the image and border
-                  }}
-                  src={employee.imageSrc}
-                  alt={`Image of ${employee.name}`}
-                />
-              </div>
-              <div>
-                <Card.Body>
-                  <h5>
-                    <Card.Text style={{ color: "blue" }}>
-                      {employee.name}
-                    </Card.Text>
-                  </h5>
-                  <Card.Text>{employee.role}</Card.Text>
-                  <Card.Text
-                    className="btn btn-primary"
-                    style={{ borderRadius: "200px" }}
-                  >
-                    {employee.skills.join(", ")}
-                  </Card.Text>
-                </Card.Body>
-              </div>
+       <div className="mt-5 d-flex flex-wrap justify-content-between">
+      {employeeData.map((employee) => (
+        <Card key={employee.id} style={{ width: '18rem', marginBottom: '1rem' }}>
+          <div className="text-center">
+            <div className="mt-3">
+              <Card.Img
+                className="rounded-circle"
+                style={{
+                  width: '100px',
+                  height: '100px',
+                  objectFit: 'cover',
+                  border: '1px solid #ff7849', // Changed color to #ff7849
+                  padding: '5px',
+                }}
+                src={employee.imageSrc}
+                alt={`Image of ${employee.name}`}
+              />
             </div>
-            <ListGroup className="list-group-flush">
-              <div className="d-flex justify-content-between p-3">
-                <span>Employee ID:</span>
-                <span>{employee.id}</span>
-              </div>
-              <div className="d-flex justify-content-between p-3">
-                <span>Date of Join:</span>
-                <span>{employee.dateOfJoin}</span>
-              </div>
-            </ListGroup>
-            <Card.Body>
-              <Card.Link href="#" className="btn btn-primary w-100">
-                View Profile
-              </Card.Link>
-            </Card.Body>
-          </Card>
-        ))}
-      </div>
+            <div>
+              <Card.Body>
+                <h5>
+                  <Card.Text style={{ color: '#ff7849' }}> 
+                    {employee.name}
+                  </Card.Text>
+                </h5>
+                <Card.Text>{employee.role}</Card.Text>
+                <Card.Text
+                  className="btn btn-primary"
+                  style={{ borderRadius: '200px', backgroundColor: '#ff7849', borderColor: '#ff7849' }} // Changed background and border color to #ff7849
+                >
+                  {employee.skills.join(', ')}
+                </Card.Text>
+              </Card.Body>
+            </div>
+          </div>
+          <ListGroup className="list-group-flush">
+            <div className="d-flex justify-content-between p-3">
+              <span>Employee ID:</span>
+              <span>{employee.id}</span>
+            </div>
+            <div className="d-flex justify-content-between p-3">
+              <span>Date of Join:</span>
+              <span>{employee.dateOfJoin}</span>
+            </div>
+          </ListGroup>
+          <Card.Body>
+            <Card.Link href="#" className="btn btn-primary w-100" style={{ backgroundColor: '#ff7849', borderColor: '#ff7849' }}>
+              View Profile
+            </Card.Link>
+          </Card.Body>
+        </Card>
+      ))}
+    </div>
     </>
   );
 };

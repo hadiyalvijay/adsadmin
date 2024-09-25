@@ -20,4 +20,75 @@ visibility: visible;
   .main-content {
     transition: margin-left 0.3s;
   }
-  
+  /* Add this CSS to your Header.css or in a <style> block */
+
+.submenu-item {
+  position: relative;
+  cursor: pointer;
+  padding: 5px 10px;
+  width: 100%;
+  display: block;
+  margin: 0;
+  transition: background-color 0.3s, padding-left 0.3s, padding-right 0.3s;
+}
+
+.submenu-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: width 0.3s;
+  z-index: -1;
+}
+
+.submenu-item:hover::before {
+  width: 100%;
+}
+
+.submenu-item:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.dropdown-menu.notifications {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.topnav-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.notification-list {
+  padding: 0;
+  margin: 0;
+}
+
+.notification-message {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.notification-message a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.notification-time {
+  font-size: 0.8em;
+  color: #888;
+}
+
+.clear-noti {
+  color: #ff7849;
+  cursor: pointer;
+}
+
+.topnav-dropdown-footer {
+  padding: 10px;
+  text-align: center;
+}

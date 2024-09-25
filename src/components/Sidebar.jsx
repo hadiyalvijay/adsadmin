@@ -23,7 +23,7 @@ const Sidebar = () => {
 
   const handleHomeClick = () => {
     setShowPageHeader(!showPageHeader);
-    
+
     if (sidebarRef.current) {
       sidebarRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -33,15 +33,8 @@ const Sidebar = () => {
     const handleScroll = () => {
       if (sidebarRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = sidebarRef.current;
-        // If the content is scrolled to the bottom
         if (scrollTop + clientHeight >= scrollHeight) {
-          sidebarRef.current.style.position = 'fixed'; // Change to fixed
-          sidebarRef.current.style.bottom = '0';
-          sidebarRef.current.style.overflowY = 'hidden'; // Hide scrollbar
-        } else {
-          sidebarRef.current.style.position = 'sticky';
-          // sidebarRef.current.style.bottom = 'initial';
-          sidebarRef.current.style.overflowY = 'auto'; // Show scrollbar
+          sidebarRef.current.scrollTop = scrollHeight; // Prevent further scrolling
         }
       }
     };
@@ -60,14 +53,26 @@ const Sidebar = () => {
 
   return (
     <>
-      <div className="sidebar" ref={sidebarRef} style={{backgroundColor:"#ff7849" ,width:"74px", height: "100vh", overflowY: "scroll", scrollbarWidth: 'none', msOverflowStyle: 'none'}} >
+      <div
+        className="sidebar"
+        ref={sidebarRef}
+        style={{
+          backgroundColor: "#ff7849",
+          width: "74px",
+          height: "100vh",
+          overflowY: "auto", // Changed to auto for better scroll handling
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          position: 'fixed', // Fixed position to keep it in place
+        }}
+      >
         <ul className="list-unstyled d-flex flex-column align-items-center justify-content-around h-100">
           <li className="my-3">
-            <FontAwesomeIcon 
-              icon={faHouse} 
-              className="text-white fs-5" 
-              onClick={handleHomeClick} 
-              style={{ cursor: "pointer" }} 
+            <FontAwesomeIcon
+              icon={faHouse}
+              className="text-white fs-5"
+              onClick={handleHomeClick}
+              style={{ cursor: "pointer" }}
             />
           </li>
           <li className="my-3"><RiDashboardLine className="text-white fs-4" /></li>
@@ -87,7 +92,6 @@ const Sidebar = () => {
         </ul>
       </div>
       {showPageHeader && <PageHeader />}
-      
     </>
   );
 };

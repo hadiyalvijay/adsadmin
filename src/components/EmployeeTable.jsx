@@ -1,143 +1,161 @@
-import React from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrashCan } from "@fortawesome/free-solid-svg-icons";
-// import Sidebar from "./Sidebar";
 
 const EmployeeTable = () => {
+  const [view, setView] = useState("list"); // State to manage view
+
+  const handleToggleView = () => {
+    setView(view === "list" ? "grid" : "list"); // Toggle between list and grid views
+  };
+
   return (
-    <>
-     
-      <div
-        className="container-fluid mt-4" // Changed to container-fluid for full width
-        style={{ borderRadius: "2px", borderColor: "black",width:"100%" }} 
-        
-      >
-       
-        <div className="row">
-     
-          <div className="col-md-12">
-            <div className="table-responsive">
-              <table className="table table-striped custom-table text-center">
-                <thead>
-                  <tr>
-                    <th style={{ backgroundColor: "#f4f8ff" }}>Name</th>
-                    <th style={{ backgroundColor: "#f4f8ff" }}>Employee ID</th>
-                    <th style={{ backgroundColor: "#f4f8ff" }}>Email</th>
-                    <th style={{ backgroundColor: "#f4f8ff" }}>Mobile</th>
-                    <th
-                      style={{ backgroundColor: "#f4f8ff" }}
-                      className="text-nowrap"
-                    >
-                      Join Date
-                    </th>
-                    <th style={{ backgroundColor: "#f4f8ff" }}>Role</th>
-                    <th
-                      style={{ backgroundColor: "#f4f8ff" }}
-                      className="text-end no-sort"
-                    >
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {employees.map((employee, index) => (
-                    <tr key={index}>
-                      <td className="align-middle">
-                        <div className="d-flex align-items-center">
-                          <div
-                            className="avatar-container rounded-circle border border-primary d-flex align-items-center justify-content-center me-3"
+    <div
+      className="container-fluid mt-4"
+      style={{ borderRadius: "2px", borderColor: "black", width: "100%" }}
+    >
+      {view === "list" ? (
+        <div className="table-responsive">
+          <table className="table table-striped custom-table text-center">
+            <thead>
+              <tr>
+                <th style={{ backgroundColor: "#f4f8ff" }}>Name</th>
+                <th style={{ backgroundColor: "#f4f8ff" }}>Employee ID</th>
+                <th style={{ backgroundColor: "#f4f8ff" }}>Email</th>
+                <th style={{ backgroundColor: "#f4f8ff" }}>Mobile</th>
+                <th
+                  style={{ backgroundColor: "#f4f8ff" }}
+                  className="text-nowrap"
+                >
+                  Join Date
+                </th>
+                <th style={{ backgroundColor: "#f4f8ff" }}>Role</th>
+                <th
+                  style={{ backgroundColor: "#f4f8ff" }}
+                  className="text-end no-sort"
+                >
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {employees.map((employee, index) => (
+                <tr key={index}>
+                  <td className="align-middle">
+                    <div className="d-flex align-items-center">
+                      <div
+                        className="avatar-container rounded-circle border border-primary d-flex align-items-center justify-content-center me-3"
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          overflow: "hidden",
+                          borderWidth: "2px",
+                          borderColor: "#f98a49",
+                          padding: "2px",
+                        }}
+                      >
+                        <a href="profile.html" className="avatar">
+                          <img
+                            alt={employee.name}
+                            src={employee.avatar}
+                            className="rounded-circle"
                             style={{
-                              width: "60px",
-                              height: "60px",
-                              overflow: "hidden",
-                              borderWidth: "2px",
-                              borderColor: "#007bff",
-                              padding: "2px",
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
                             }}
-                          >
-                            <a href="profile.html" className="avatar">
-                              <img
-                                alt={employee.name}
-                                src={employee.avatar}
-                                className="rounded-circle"
-                                style={{
-                                  width: "100%",
-                                  height: "100%",
-                                  objectFit: "cover",
-                                }}
-                              />
-                            </a>
-                          </div>
-                          <div className="d-flex flex-column justify-content-center">
-                            <a
-                              href="profile.html"
-                              className="text-decoration-none"
-                            >
-                              <div className="fw-bold">{employee.name}</div>
-                              <div>
-                                <span
-                                  className="text-muted"
-                                  style={{ color: "#54648e" }}
-                                >
-                                  {employee.role}
-                                </span>
-                              </div>
-                            </a>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="align-middle">{employee.id}</td>
-                      <td className="align-middle">{employee.email}</td>
-                      <td className="align-middle">{employee.mobile}</td>
-                      <td className="align-middle">{employee.joinDate}</td>
-                      <div className="">
-                        <td
-                          className="d-flex justify-content-center  "
-                          style={{
-                            backgroundColor:
-                              roleColors[employee.role]?.background ||
-                              "#ffffff",
-                            borderRadius: "10px",
-                            color:
-                              roleColors[employee.role]?.color || "#000000",
-                            height: "60px",
-                            textAlign: "center",
-                            lineHeight: "60px",
-                          }}
-                        >
-                          {employee.role}
-                        </td>
+                          />
+                        </a>
                       </div>
-                      <td className="align-middle text-end">
-                        <div className="d-flex justify-content-center gap-3">
-                          <a
-                            href="#"
-                            data-bs-toggle="modal"
-                            data-bs-target="#edit_employee"
-                            style={{ cursor: "pointer", color: "black" }}
-                          >
-                            <FontAwesomeIcon icon={faPen} />
-                          </a>
-                          <a
-                            href="#"
-                            data-bs-toggle="modal"
-                            data-bs-target="#delete_employee"
-                            style={{ cursor: "pointer", color: "black" }}
-                          >
-                            <FontAwesomeIcon icon={faTrashCan} />
-                          </a>
-                        </div>
+                      <div className="d-flex flex-column justify-content-center">
+                        <a href="#" className="text-decoration-none">
+                          <div className="fw-bold">{employee.name}</div>
+                          <div>
+                            <span
+                              className="text-muted"
+                              style={{ color: "#f98a49" }}
+                            >
+                              {employee.role}
+                            </span>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="align-middle">{employee.id}</td>
+                  <td className="align-middle">{employee.email}</td>
+                  <td className="align-middle">{employee.mobile}</td>
+                  <td className="align-middle">{employee.joinDate}</td>
+                  <div className="align-middle" style={{ textAlign: "center", padding: "14px" }}>
+                   
+                      <td
+                        className=""
+                        style={{
+                          backgroundColor:
+                            roleColors[employee.role]?.background || "#ffffff",
+                          color: roleColors[employee.role]?.color || "#000000",
+                          borderRadius: "10px",
+                          height: "49px",
+                          width: "200px",
+                        }}
+                      >
+                        {employee.role}
                       </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                  </div>
+                  <td className="align-middle text-end">
+                    <div className="d-flex justify-content-center gap-3">
+                      <a
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#edit_employee"
+                        style={{ cursor: "pointer", color: "black" }}
+                      >
+                        <FontAwesomeIcon icon={faPen} />
+                      </a>
+                      <a
+                        href="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delete_employee"
+                        style={{ cursor: "pointer", color: "black" }}
+                      >
+                        <FontAwesomeIcon icon={faTrashCan} />
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </div>
-    </>
+      ) : (
+        <div className="d-flex flex-wrap justify-content-center">
+          {employees.map((employee) => (
+            <div
+              key={employee.id}
+              className="card m-2"
+              style={{ width: "18rem" }}
+            >
+              <img
+                src={employee.avatar}
+                className="card-img-top"
+                alt={employee.name}
+              />
+              <div className="card-body">
+                <h5 className="card-title">{employee.name}</h5>
+                <p className="card-text">{employee.role}</p>
+                <p className="card-text">{employee.email}</p>
+                <p className="card-text">{employee.mobile}</p>
+                <p className="card-text">{employee.joinDate}</p>
+                <a href="#" className="btn btn-primary">
+                  View Profile
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -148,7 +166,7 @@ const roleColors = {
   "Web Developer": { background: "#fff8f6", color: "#ff7849" },
   "Software Tester": { background: "#fff4e1", color: "#ffa400" },
   "IOS Developer": { background: "#fff4e1", color: "#ffa400" },
-  "Team Leader": { background: "#dceeff", color: "##4f7abd" },
+  "Team Leader": { background: "#dceeff", color: "#4f7abd" },
   "Frontend Developer": { background: "#dceeff", color: "#4f7abd" },
   "Backend Developer": { background: "#fff8f6", color: "#ff7849" },
   "UX Designer": { background: "#fff8f6", color: "#ff7849" },
@@ -163,6 +181,7 @@ const roleColors = {
   "Graphic Designer": { background: "#dceeff", color: "#4f7abd" },
   "SEO Specialist": { background: "#dceeff", color: "#4f7abd" },
 };
+
 const employees = [
   {
     id: "FT-0001",
