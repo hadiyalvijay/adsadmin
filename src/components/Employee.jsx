@@ -1,16 +1,21 @@
 import React, { useState } from "react";
 import Header from "./Header";
 import SubSidebar from "./SubSidebar";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { MdKeyboardArrowRight } from "react-icons/md";
+
 import EmployeeFilter from "./EmployeeFilter";
 import Sidebar from "./Sidebar";
 
-const Employee = () => {
+const Employee = ({isDarkMode, headerColor }) => {
   const [isSubSidebarVisible, setSubSidebarVisible] = useState(true);
+  
 
   const toggleSubSidebar = () => {
     setSubSidebarVisible(!isSubSidebarVisible);
+  };
+  const updateTheme = (darkMode, color) => {
+    setIsDarkMode(darkMode);
+    setHeaderColor(color);
   };
 
   return (
@@ -18,12 +23,16 @@ const Employee = () => {
       <Header
         onSidebarToggle={toggleSubSidebar}
         isSidebarOpen={isSubSidebarVisible}
+        setTheme={updateTheme}
       />
 
       <div className="d-flex">
         <Sidebar />
         {/* SubSidebar */}
-        <SubSidebar isVisible={isSubSidebarVisible} />
+        <SubSidebar 
+          isVisible={isSubSidebarVisible}
+          isDarkMode={isDarkMode}
+          headerColor={headerColor} />
 
         {/* Main Content */}
         <div
@@ -45,16 +54,15 @@ const Employee = () => {
               <div className="col-12 col-md-6">
                 <ul className="breadcrumb d-flex justify-content-end">
                   <li className="breadcrumb-item">
-                    <a href="#" className="text-decoration-none text-dark fs-5">
+                    <a href="#" className="text-decoration-none text-dark fs-6">
                       Dashboard
                     </a>
                   </li>
                   <li className="fs-5 d-flex align-items-center gap-2">
-                    <FontAwesomeIcon  
-                      icon={faChevronRight}
-                      className="opacity-25"
-                    />
-                    Employee
+                 <div className="d-flex align-items-center fs-6">
+                 <MdKeyboardArrowRight />Employee
+                 </div>
+                    
                   </li>
                 </ul>
               </div>

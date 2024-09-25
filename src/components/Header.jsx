@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import Logo from "../img/logo.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faBell } from "@fortawesome/free-solid-svg-icons";
+import { FaRegBell } from "react-icons/fa6";
 import { MdOutlineSearch, MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { HiOutlineBars3CenterLeft } from "react-icons/hi2";
+import SubSidebar from "./SubSidebar";
 
-const Header = ({ onSidebarToggle, isSidebarOpen }) => {
+const Header = ({ onSidebarToggle, isSidebarOpen, }) => {
   const [showClients, setShowClients] = useState(false);
   const [showProjects, setShowProjects] = useState(false);
   const [showLeads, setShowLeads] = useState(false);
@@ -13,6 +13,11 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
   const [showAdminMenu, setShowAdminMenu] = useState(false);
   const [showSmarthrText, setShowSmarthrText] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(5);
+  const [showModeMenu, setShowModeMenu] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [headerColor, setHeaderColor] = useState("#fff"); 
+  const [theme, setTheme] = useState("default");
 
   const clientsRef = useRef(null);
   const projectsRef = useRef(null);
@@ -20,6 +25,7 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
   const ticketsRef = useRef(null);
   const adminRef = useRef(null);
   const notificationsRef = useRef(null);
+  const modeRef = useRef(null); // Added ref for mode menu
 
   const toggleClientsMenu = () => {
     setShowClients(!showClients);
@@ -65,10 +71,73 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
     setShowNotifications(!showNotifications);
   };
 
+  const toggleModeMenu = () => {
+    setShowModeMenu(!showModeMenu);
+  };
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(true); 
+    setTheme(true,"#333");
+    setHeaderColor("#333"); 
+    localStorage.setItem("colorMode", "dark"); 
+
+  };
+
+  const toggleGreenMode = () => {
+    setIsDarkMode(false); // Ensure dark mode is off
+    setTheme("green");
+    setHeaderColor("#28a745"); // Set header color to green
+    localStorage.setItem("colorMode", "green"); // Save preference
+    // Update all dropdowns to green
+    document.querySelectorAll("ul.dropdown-menu").forEach((menu) => {
+      menu.style.backgroundColor = "#28a745"; // Set dropdown background to green
+      menu.style.color = "#fff"; // Set text color to white
+    });
+  };
+
+  const toggleOrangeMode = () => {
+    setIsDarkMode(false); // Ensure dark mode is off
+    setTheme("orange");
+    setHeaderColor("#ff7f50"); // Set header color to orange
+    localStorage.setItem("colorMode", "orange"); // Save preference
+    // Update all dropdowns to orange
+    document.querySelectorAll("ul.dropdown-menu").forEach((menu) => {
+      menu.style.backgroundColor = "#ff7f50"; // Set dropdown background to orange
+      menu.style.color = "#fff"; // Set text color to white
+    });
+  };
+
   const handleSidebarToggle = () => {
     onSidebarToggle();
     setShowSmarthrText(!showSmarthrText);
   };
+  const resetToDefault = () => {
+    setTheme("default");
+    setHeaderColor("#fff");
+    localStorage.setItem("colorMode", "default");
+  };
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("colorMode") || "default";
+    setTheme(savedTheme);
+  }, []);
+
+  useEffect(() => {
+    // Load the color mode from localStorage on component mount
+    const savedMode = localStorage.getItem("colorMode");
+    if (savedMode) {
+      setIsDarkMode(savedMode === "dark");
+      setHeaderColor(
+        savedMode === "dark"
+          ? "#333"
+          : savedMode === "green"
+          ? "#28a745"
+          : savedMode === "orange"
+          ? "#ff7f50"
+          : "#fff"
+      ); 
+    }
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -84,7 +153,9 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
         adminRef.current &&
         !adminRef.current.contains(event.target) &&
         notificationsRef.current &&
-        !notificationsRef.current.contains(event.target)
+        !notificationsRef.current.contains(event.target) &&
+        modeRef.current &&
+        !modeRef.current.contains(event.target)
       ) {
         setShowClients(false);
         setShowProjects(false);
@@ -92,6 +163,7 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
         setShowTickets(false);
         setShowAdminMenu(false);
         setShowNotifications(false);
+        setShowModeMenu(false); // Hide mode menu on outside click
       }
     };
 
@@ -104,7 +176,8 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
   return (
     <header
       style={{
-        backgroundColor: "#fff",
+        backgroundColor: isDarkMode ? "#333" : headerColor, // Change background color based on dark mode or selected color
+        color: isDarkMode ? "#fff" : "#000", // Change text color based on dark mode
         position: "sticky",
         top: 0,
         zIndex: 1000,
@@ -151,10 +224,15 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
                 Clients <MdOutlineKeyboardArrowDown />
               </div>
               {showClients && (
-                <ul className="list-unstyled position-absolute card p-2 dropdown-menu" style={{ width: "140px" }}>
-                  <li className="submenu-item">
-                    Clients
-                  </li>
+                <ul
+                  className="list-unstyled position-absolute card p-2 dropdown-menu"
+                  style={{
+                    width: "140px",
+                    backgroundColor: isDarkMode ? "#333" : "#fff",
+                    color: isDarkMode ? "#fff" : "#000",
+                  }}
+                >
+                  <li className="submenu-item">Clients</li>
                 </ul>
               )}
             </div>
@@ -165,16 +243,17 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
                 Projects <MdOutlineKeyboardArrowDown />
               </div>
               {showProjects && (
-                <ul className="list-unstyled position-absolute card p-3 dropdown-menu" style={{ width: "140px" }}>
-                  <li className="submenu-item">
-                    Projects
-                  </li>
-                  <li className="submenu-item">
-                    Tasks
-                  </li>
-                  <li className="submenu-item">
-                    Task Board
-                  </li>
+                <ul
+                  className="list-unstyled position-absolute card p-3 dropdown-menu"
+                  style={{
+                    width: "140px",
+                    backgroundColor: isDarkMode ? "#333" : "#fff",
+                    color: isDarkMode ? "#fff" : "#000",
+                  }}
+                >
+                  <li className="submenu-item">Projects</li>
+                  <li className="submenu-item">Tasks</li>
+                  <li className="submenu-item">Task Board</li>
                 </ul>
               )}
             </div>
@@ -185,10 +264,15 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
                 Leads <MdOutlineKeyboardArrowDown />
               </div>
               {showLeads && (
-                <ul className="list-unstyled position-absolute card p-2 dropdown-menu" style={{ width: "140px" }}>
-                  <li className="submenu-item">
-                    Leads
-                  </li>
+                <ul
+                  className="list-unstyled position-absolute card p-2 dropdown-menu"
+                  style={{
+                    width: "140px",
+                    backgroundColor: isDarkMode ? "#333" : "#fff",
+                    color: isDarkMode ? "#fff" : "#000",
+                  }}
+                >
+                  <li className="submenu-item">Leads</li>
                 </ul>
               )}
             </div>
@@ -199,16 +283,66 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
                 Tickets <MdOutlineKeyboardArrowDown />
               </div>
               {showTickets && (
-                <ul className="list-unstyled position-absolute card p-2 dropdown-menu" style={{ width: "140px" }}>
-                  <li className="submenu-item">
-                    Tickets
-                  </li>
+                <ul
+                  className="list-unstyled position-absolute card p-2 dropdown-menu"
+                  style={{
+                    width: "140px",
+                    backgroundColor: isDarkMode ? "#333" : "#fff",
+                    color: isDarkMode ? "#fff" : "#000",
+                  }}
+                >
+                  <li className="submenu-item">Tickets</li>
                 </ul>
               )}
             </div>
           </div>
 
           <div className="d-flex align-items-center gap-4">
+            <div className="position-relative" ref={modeRef}>
+              <div onClick={toggleModeMenu} style={{ cursor: "pointer" }}>
+                MODE <MdOutlineKeyboardArrowDown />
+              </div>
+              {showModeMenu && (
+                <ul
+                  className="list-unstyled position-absolute card p-3 dropdown-menu"
+                  style={{
+                    width: "140px",
+                    backgroundColor: isDarkMode ? "#333" : "#fff",
+                    color: isDarkMode ? "#fff" : "#000",
+                  }}
+                >
+                  <li
+                    className="submenu-item hover-dark"
+                    onClick={toggleDarkMode}
+                  >
+                    Dark
+                  </li>
+                  <li
+                    className="green-menu hover-green"
+                    onClick={toggleGreenMode}
+                  >
+                    Green
+                  </li>
+                  <li
+                    className="orange-menu hover-Orange"
+                    onClick={toggleOrangeMode}
+                  >
+                    Orange
+                  </li>
+                  <li
+                    className="submenu-item default-menu"
+                    onClick={() => {
+                      setHeaderColor("#fff"); // Set header color to default
+                      setIsDarkMode(false); // Ensure dark mode is off
+                      resetToDefault(true);// Save preference
+                    }}
+                  >
+                    Default
+                  </li>
+                </ul>
+              )}
+            </div>
+            
             <form className="position-relative">
               <input
                 type="text"
@@ -229,13 +363,60 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
               />
             </form>
 
-            <div className="position-relative" ref={notificationsRef}>
-              <FontAwesomeIcon icon={faBell} onClick={toggleNotifications} style={{ cursor: "pointer" }} />
+            <div className="  position-relative" ref={notificationsRef}>
+              <FaRegBell
+                size="20"
+                onClick={toggleNotifications}
+                style={{ cursor: "pointer" }}
+              />
+              {notificationCount > 0 && (
+                <div
+                  className="notification-count"
+                  style={{
+                    height: "17px",
+                    width: "15px",
+                    borderRadius: "50%",
+                    backgroundColor: "#ff7849",
+                    color: "#fff",
+                    display: "flex",
+                    justifyContent: "center",
+                    position: "absolute",
+                    top: "-5px",
+                    right: "0",
+                    left: "12px",
+                    fontSize: "12px",
+                  }}
+                >
+                  <span> {notificationCount}</span>
+                </div>
+              )}
               {showNotifications && (
-                <div className="dropdown-menu notifications position-absolute card p-2" style={{ width: "350px", right: 0 }}>
-                  <div className="topnav-dropdown-header d-flex justify-content-between align-items-center">
+                <div
+                  className="dropdown-menu notifications position-absolute card p-2"
+                  style={{
+                    width: "350px",
+                    right: 0,
+                    backgroundColor: isDarkMode ? "#333" : "#fff",
+                    color: isDarkMode ? "#fff" : "#000",
+                  }} // Updated for dark mode
+                >
+                  <div
+                    className="topnav-dropdown-header d-flex justify-content-between align-items-center"
+                    style={{
+                      backgroundColor: isDarkMode ? "#444" : "#f8f9fa",
+                      color: isDarkMode ? "#fff" : "#000",
+                    }}
+                  >
+                    {" "}
+                    {/* Updated for dark mode */}
                     <span className="notification-title">Notifications</span>
-                    <a href="#" className="btn btn-link p-0 text-decoration-none" style={{color:"#ff7849"}}>Clear All</a>
+                    <a
+                      href="#"
+                      className="btn btn-link p-0 text-decoration-none"
+                      style={{ color: "#ff7849" }}
+                    >
+                      Clear All
+                    </a>
                   </div>
                   <div className="noti-content">
                     <ul className="notification-list list-unstyled">
@@ -243,11 +424,25 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
                         <a href="activities.html">
                           <div className="media d-flex gap-3">
                             <span className="avatar flex-shrink-0">
-                              <img alt="avatar" src="https://via.placeholder.com/40" className="rounded-circle" />
+                              <img
+                                alt="avatar"
+                                src="https://via.placeholder.com/40"
+                                className="rounded-circle"
+                              />
                             </span>
                             <div className="media-body flex-grow-1">
-                              <p className="noti-details"><span className="noti-title">John Doe</span> added new task <span className="noti-title">Patient appointment booking</span></p>
-                              <p className="noti-time"><span className="notification-time">4 mins ago</span></p>
+                              <p className="noti-details">
+                                <span className="noti-title">John Doe</span>{" "}
+                                added new task{" "}
+                                <span className="noti-title">
+                                  Patient appointment booking
+                                </span>
+                              </p>
+                              <p className="noti-time">
+                                <span className="notification-time">
+                                  4 mins ago
+                                </span>
+                              </p>
                             </div>
                           </div>
                         </a>
@@ -256,11 +451,27 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
                         <a href="activities.html">
                           <div className="media d-flex gap-3">
                             <span className="avatar flex-shrink-0">
-                              <img alt="avatar" src="https://via.placeholder.com/40" className="rounded-circle" />
+                              <img
+                                alt="avatar"
+                                src="https://via.placeholder.com/40"
+                                className="rounded-circle"
+                              />
                             </span>
                             <div className="media-body flex-grow-1">
-                              <p className="noti-details"><span className="noti-title">Tarah Shropshire</span> changed the task name <span className="noti-title">Appointment booking with payment gateway</span></p>
-                              <p className="noti-time"><span className="notification-time">6 mins ago</span></p>
+                              <p className="noti-details">
+                                <span className="noti-title">
+                                  Tarah Shropshire
+                                </span>{" "}
+                                changed the task name{" "}
+                                <span className="noti-title">
+                                  Appointment booking with payment gateway
+                                </span>
+                              </p>
+                              <p className="noti-time">
+                                <span className="notification-time">
+                                  6 mins ago
+                                </span>
+                              </p>
                             </div>
                           </div>
                         </a>
@@ -269,11 +480,31 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
                         <a href="activities.html">
                           <div className="media d-flex gap-3">
                             <span className="avatar flex-shrink-0">
-                              <img alt="avatar" src="https://via.placeholder.com/40" className="rounded-circle" />
+                              <img
+                                alt="avatar"
+                                src="https://via.placeholder.com/40"
+                                className="rounded-circle"
+                              />
                             </span>
                             <div className="media-body flex-grow-1">
-                              <p className="noti-details"><span className="noti-title">Misty Tison</span> added <span className="noti-title">Domenic Houston</span> and <span className="noti-title">Claire Mapes</span> to project <span className="noti-title">Doctor available module</span></p>
-                              <p className="noti-time"><span className="notification-time">8 mins ago</span></p>
+                              <p className="noti-details">
+                                <span className="noti-title">Misty Tison</span>{" "}
+                                added{" "}
+                                <span className="noti-title">
+                                  Domenic Houston
+                                </span>{" "}
+                                and{" "}
+                                <span className="noti-title">Claire Mapes</span>{" "}
+                                to project{" "}
+                                <span className="noti-title">
+                                  Doctor available module
+                                </span>
+                              </p>
+                              <p className="noti-time">
+                                <span className="notification-time">
+                                  8 mins ago
+                                </span>
+                              </p>
                             </div>
                           </div>
                         </a>
@@ -282,11 +513,27 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
                         <a href="activities.html">
                           <div className="media d-flex gap-3">
                             <span className="avatar flex-shrink-0">
-                              <img alt="avatar" src="https://via.placeholder.com/40" className="rounded-circle" />
+                              <img
+                                alt="avatar"
+                                src="https://via.placeholder.com/40"
+                                className="rounded-circle"
+                              />
                             </span>
                             <div className="media-body flex-grow-1">
-                              <p className="noti-details"><span className="noti-title">Rolland Webber</span> completed task <span className="noti-title">Patient and Doctor video conferencing</span></p>
-                              <p className="noti-time"><span className="notification-time">12 mins ago</span></p>
+                              <p className="noti-details">
+                                <span className="noti-title">
+                                  Rolland Webber
+                                </span>{" "}
+                                completed task{" "}
+                                <span className="noti-title">
+                                  Patient and Doctor video conferencing
+                                </span>
+                              </p>
+                              <p className="noti-time">
+                                <span className="notification-time">
+                                  12 mins ago
+                                </span>
+                              </p>
                             </div>
                           </div>
                         </a>
@@ -295,11 +542,27 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
                         <a href="activities.html">
                           <div className="media d-flex gap-3">
                             <span className="avatar flex-shrink-0">
-                              <img alt="avatar" src="https://via.placeholder.com/40" className="rounded-circle" />
+                              <img
+                                alt="avatar"
+                                src="https://via.placeholder.com/40"
+                                className="rounded-circle"
+                              />
                             </span>
                             <div className="media-body flex-grow-1">
-                              <p className="noti-details"><span className="noti-title">Bernardo Galaviz</span> added new task <span className="noti-title">Private chat module</span></p>
-                              <p className="noti-time"><span className="notification-time">2 days ago</span></p>
+                              <p className="noti-details">
+                                <span className="noti-title">
+                                  Bernardo Galaviz
+                                </span>{" "}
+                                added new task{" "}
+                                <span className="noti-title">
+                                  Private chat module
+                                </span>
+                              </p>
+                              <p className="noti-time">
+                                <span className="notification-time">
+                                  2 days ago
+                                </span>
+                              </p>
                             </div>
                           </div>
                         </a>
@@ -307,7 +570,13 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
                     </ul>
                   </div>
                   <div className="topnav-dropdown-footer">
-                    <a href="activities.html" className=" btn-sm w-100 text-decoration-none" style={{color:"#7b7b7b"}}>View all Notifications</a> 
+                    <a
+                      href="activities.html"
+                      className=" btn-sm w-100 text-decoration-none"
+                      style={{ color: "#7b7b7b" }}
+                    >
+                      View all Notifications
+                    </a>
                   </div>
                 </div>
               )}
@@ -332,17 +601,17 @@ const Header = ({ onSidebarToggle, isSidebarOpen }) => {
                 {showAdminMenu && (
                   <ul
                     className="list-unstyled position-absolute card p-2 dropdown-menu"
-                    style={{ top: "100%", right: "0", width: "140px" }}
+                    style={{
+                      top: "100%",
+                      right: "0",
+                      width: "140px",
+                      backgroundColor: isDarkMode ? "#333" : "#fff",
+                      color: isDarkMode ? "#fff" : "#000",
+                    }}
                   >
-                    <li className="submenu-item">
-                      My Profile
-                    </li>
-                    <li className="submenu-item">
-                      Settings
-                    </li>
-                    <li className="submenu-item">
-                      Logout
-                    </li>
+                    <li className="submenu-item">My Profile</li>
+                    <li className="submenu-item">Settings</li>
+                    <li className="submenu-item">Logout</li>
                   </ul>
                 )}
               </div>

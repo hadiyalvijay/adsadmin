@@ -1,61 +1,241 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IoIosArrowRoundDown, IoIosArrowRoundUp } from "react-icons/io";
 import { faPen, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 const EmployeeTable = () => {
   const [view, setView] = useState("list"); // State to manage view
+  const [sortOrder, setSortOrder] = useState({ field: "name", order: "asc" }); // State to manage sorting
 
-  const handleToggleView = () => {
-    setView(view === "list" ? "grid" : "list"); // Toggle between list and grid views
+  // Toggle between ascending and descending sorting for any field
+  const handleSort = (field) => {
+    setSortOrder({
+      field,
+      order:
+        sortOrder.order === "asc" && sortOrder.field === field ? "desc" : "asc",
+    });
   };
 
+  // Function to sort employees dynamically by any field
+  const sortedEmployees = [...employees].sort((a, b) => {
+    const { field, order } = sortOrder;
+    const valA = a[field];
+    const valB = b[field];
+
+    if (typeof valA === "string") {
+      return order === "asc"
+        ? valA.localeCompare(valB)
+        : valB.localeCompare(valA);
+    } else {
+      return order === "asc" ? valA - valB : valB - valA;
+    }
+  });
+
+  
   return (
-    <div
-      className="container-fluid mt-4"
-      style={{ borderRadius: "2px", borderColor: "black", width: "100%" }}
-    >
+    <div className="container-fluid mt-4" style={{ width: "100%" }}>
       {view === "list" ? (
         <div className="table-responsive">
-          <table className="table table-striped custom-table text-center">
+          <table className="table table-striped custom-table">
             <thead>
               <tr>
-                <th style={{ backgroundColor: "#f4f8ff" }}>Name</th>
-                <th style={{ backgroundColor: "#f4f8ff" }}>Employee ID</th>
-                <th style={{ backgroundColor: "#f4f8ff" }}>Email</th>
-                <th style={{ backgroundColor: "#f4f8ff" }}>Mobile</th>
-                <th
-                  style={{ backgroundColor: "#f4f8ff" }}
-                  className="text-nowrap"
-                >
-                  Join Date
+                <th style={{ backgroundColor: "#f4f8ff", width: "100px", }}>
+                  <div
+                    className="d-flex justify-content-center align-items-center gap-5"
+                    style={{ cursor: "pointer",gap:"100px" }}
+                  >
+                    <span className="fw-bold w-100">Name</span>
+                    <div
+                      onClick={() => handleSort("name")}
+                      className="d-flex align-items-center"
+                    >
+                      <IoIosArrowRoundUp
+                        color={
+                          sortOrder.field === "name" &&
+                          sortOrder.order === "asc"
+                            ? "black"
+                            : "grey"
+                        }
+                      />
+                      <IoIosArrowRoundDown
+                        color={
+                          sortOrder.field === "name" &&
+                          sortOrder.order === "desc"
+                            ? "black"
+                            : "grey"
+                        }
+                      />
+                    </div>
+                  </div>
                 </th>
-                <th style={{ backgroundColor: "#f4f8ff" }}>Role</th>
-                <th
-                  style={{ backgroundColor: "#f4f8ff" }}
-                  className="text-end no-sort"
-                >
-                  Action
+                <th style={{ backgroundColor: "#f4f8ff", width: "250px" }}>
+                  <div
+                    className="d-flex justify-content-between align-items-center"
+                    style={{ cursor: "pointer"}}
+                  >
+                    <span className="fw-bold text-end w-100">Employee ID</span>
+                    <div
+                      onClick={() => handleSort("id")}
+                      className="d-flex text-end"
+                    >
+                      <IoIosArrowRoundUp
+                        color={
+                          sortOrder.field === "id" && sortOrder.order === "asc"
+                            ? "black"
+                            : "grey"
+                        }
+                      />
+                      <IoIosArrowRoundDown
+                        color={
+                          sortOrder.field === "id" && sortOrder.order === "desc"
+                            ? "black"
+                            : "grey"
+                        }
+                      />
+                    </div>
+                  </div>
+                </th>
+                <th style={{ backgroundColor: "#f4f8ff", width: "150px" }}>
+                  <div
+                    className="d-flex justify-content-between align-items-center"
+                    style={{ cursor: "pointer" }}
+                  >
+                    <span className="fw-bold">Email</span>
+                    <div
+                      onClick={() => handleSort("email")}
+                      className="d-flex align-items-center gap-1"
+                    >
+                      <IoIosArrowRoundUp
+                        color={
+                          sortOrder.field === "email" &&
+                          sortOrder.order === "asc"
+                            ? "black"
+                            : "grey"
+                        }
+                      />
+                      <IoIosArrowRoundDown
+                        color={
+                          sortOrder.field === "email" &&
+                          sortOrder.order === "desc"
+                            ? "black"
+                            : "grey"
+                        }
+                      />
+                    </div>
+                  </div>
+                </th>
+                <th style={{ backgroundColor: "#f4f8ff", width: "150px" }}>
+                  <div
+                    className="d-flex justify-content-between align-items-center"
+                    style={{ cursor: "pointer" }}
+                  >
+                    <span className="fw-bold">Mobile</span>
+                    <div
+                      onClick={() => handleSort("mobile")}
+                      className="d-flex align-items-center gap-1"
+                    >
+                      <IoIosArrowRoundUp
+                        color={
+                          sortOrder.field === "mobile" &&
+                          sortOrder.order === "asc"
+                            ? "black"
+                            : "grey"
+                        }
+                      />
+                      <IoIosArrowRoundDown
+                        color={
+                          sortOrder.field === "mobile" &&
+                          sortOrder.order === "desc"
+                            ? "black"
+                            : "grey"
+                        }
+                      />
+                    </div>
+                  </div>
+                </th>
+                <th style={{ backgroundColor: "#f4f8ff", width: "300px" }}>
+                  <div
+                    className="d-flex justify-content-between align-items-center"
+                    style={{ cursor: "pointer" }}
+                  >
+                    <span className="fw-bold">Join Date</span>
+                    <div
+                      onClick={() => handleSort("joinDate")}
+                      className="d-flex align-items-center gap-1"
+                    >
+                      <IoIosArrowRoundUp
+                        color={
+                          sortOrder.field === "joinDate" &&
+                          sortOrder.order === "asc"
+                            ? "black"
+                            : "grey"
+                        }
+                      />
+                      <IoIosArrowRoundDown
+                        color={
+                          sortOrder.field === "joinDate" &&
+                          sortOrder.order === "desc"
+                            ? "black"
+                            : "grey"
+                        }
+                      />
+                    </div>
+                  </div>
+                </th>
+                <th style={{ backgroundColor: "#f4f8ff", width: "150px" }}>
+                <div
+                    className="d-flex justify-content-between align-items-center"
+                    style={{ cursor: "pointer" }}
+                  >
+                    <span className="fw-bold">Role</span>
+                    <div
+                      onClick={() => handleSort("role")}
+                      className="d-flex align-items-center gap-1"
+                    >
+                      <IoIosArrowRoundUp
+                        color={
+                          sortOrder.field === "role" &&
+                          sortOrder.order === "asc"
+                            ? "black"
+                            : "grey"
+                        }
+                      />
+                      <IoIosArrowRoundDown
+                        color={
+                          sortOrder.field === "role" &&
+                          sortOrder.order === "desc"
+                            ? "black"
+                            : "grey"
+                        }
+                      />
+                    </div>
+                  </div>
+                </th>
+                <th style={{ backgroundColor: "#f4f8ff", width: "150px" }}>
+                  <span className="fw-bold">Action</span>
                 </th>
               </tr>
             </thead>
+
             <tbody>
-              {employees.map((employee, index) => (
+              {sortedEmployees.map((employee, index) => (
                 <tr key={index}>
                   <td className="align-middle">
                     <div className="d-flex align-items-center">
                       <div
-                        className="avatar-container rounded-circle border border-primary d-flex align-items-center justify-content-center me-3"
-                        style={{
-                          width: "60px",
-                          height: "60px",
-                          overflow: "hidden",
-                          borderWidth: "2px",
-                          borderColor: "#f98a49",
-                          padding: "2px",
-                        }}
+                       className="avatar-container rounded-circle d-flex align-items-center justify-content-center me-3"
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        overflow: "hidden",
+                        padding: "2px",
+                        borderColor: "#ff8459", // Changed border color
+                        borderWidth: "2px", // Added border width
+                        borderStyle: "solid", // Added border style
+                      }}
                       >
-                        <a href="profile.html" className="avatar">
+                        <a href="#" className="avatar">
                           <img
                             alt={employee.name}
                             src={employee.avatar}
@@ -70,11 +250,11 @@ const EmployeeTable = () => {
                       </div>
                       <div className="d-flex flex-column justify-content-center">
                         <a href="#" className="text-decoration-none">
-                          <div className="fw-bold">{employee.name}</div>
-                          <div>
+                          <div className="fw-bold" style={{color:"#4f648e"}}>{employee.name}</div>
+                          <div style={{ width: "150px" }}>
                             <span
-                              className="text-muted"
-                              style={{ color: "#f98a49" }}
+                              className=""
+                              style={{ color: "#ff8459" }}
                             >
                               {employee.role}
                             </span>
@@ -83,27 +263,35 @@ const EmployeeTable = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="align-middle">{employee.id}</td>
-                  <td className="align-middle">{employee.email}</td>
-                  <td className="align-middle">{employee.mobile}</td>
-                  <td className="align-middle">{employee.joinDate}</td>
-                  <div className="align-middle" style={{ textAlign: "center", padding: "14px" }}>
-                   
-                      <td
-                        className=""
-                        style={{
-                          backgroundColor:
-                            roleColors[employee.role]?.background || "#ffffff",
-                          color: roleColors[employee.role]?.color || "#000000",
-                          borderRadius: "10px",
-                          height: "49px",
-                          width: "200px",
-                        }}
-                      >
-                        {employee.role}
-                      </td>
-                  </div>
-                  <td className="align-middle text-end">
+                  <td className="align-middle text-center">{employee.id}</td>
+                  <td className="align-middle text-center">{employee.email}</td>
+                  <td className="align-middle text-center">
+                    {employee.mobile}
+                  </td>
+                  <td className="align-middle text-center">
+                    {employee.joinDate}
+                  </td>
+                  <td className="align-middle text-center">
+                    <div
+                      className="d-flex justify-content-center"
+                      style={{
+                        backgroundColor:
+                          roleColors[employee.role]?.background || "#ffffff",
+                        color: roleColors[employee.role]?.color || "#000000",
+                        borderRadius: "10px",
+                        height: "40px",
+                        width: "150px",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {employee.role}
+                    </div>
+                  </td>
+                  <td className="align-middle text-center">
                     <div className="d-flex justify-content-center gap-3">
                       <a
                         href="#"
@@ -130,7 +318,7 @@ const EmployeeTable = () => {
         </div>
       ) : (
         <div className="d-flex flex-wrap justify-content-center">
-          {employees.map((employee) => (
+          {sortedEmployees.map((employee) => (
             <div
               key={employee.id}
               className="card m-2"

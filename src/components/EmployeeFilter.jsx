@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BsGrid3X3GapFill, BsList } from 'react-icons/bs';
 import PropTypes from 'prop-types';
 import EmployeeTable from './EmployeeTable';
@@ -8,8 +8,18 @@ const EmployeeFilter = ({ initialView }) => {
   const [view, setView] = useState(initialView);
   const [showModal, setShowModal] = useState(false);
 
-  const toggleView = () => {
-    setView((prevView) => (prevView === 'grid' ? 'list' : 'grid'));
+  // Load the view from localStorage when the component mounts
+  useEffect(() => {
+    const savedView = localStorage.getItem('employeeView');
+    if (savedView) {
+      setView(savedView);
+    }
+  }, []);
+
+  // Save the selected view to localStorage
+  const updateView = (newView) => {
+    setView(newView);
+    localStorage.setItem('employeeView', newView);
   };
 
   const handleAddEmployee = () => setShowModal(true);
@@ -22,9 +32,9 @@ const EmployeeFilter = ({ initialView }) => {
   };
 
   const permissionsCategories = [
-    'Holidays', 'Leaves', 'Clients', 'Projects', 'Tasks', 'Chats', 'Assets', 'Timesheet'
+    'Holidays', 'Leaves', 'Clients', 'Projects', 'Tasks', 'Chats', 'Assets', 'Timesheet',
   ];
-  
+
   const permissionActions = ['Read', 'Write', 'Create', 'Delete', 'Import', 'Export'];
 
   return (
@@ -33,6 +43,7 @@ const EmployeeFilter = ({ initialView }) => {
         <div className="card-body" style={{ backgroundColor: '#f3f4f6' }}>
           <div className="d-flex flex-column flex-md-row justify-content-between mb-3" style={{ backgroundColor: 'white', height: 'auto', padding: '15px' }}>
             <div className="row g-3 align-items-center">
+              {/* Filter Inputs */}
               <div className="col-12 col-sm-6 col-md-3">
                 <input type="text" className="form-control" placeholder="Employee ID" />
               </div>
@@ -60,7 +71,7 @@ const EmployeeFilter = ({ initialView }) => {
                   aria-label="Grid View"
                   onClick={(e) => {
                     e.preventDefault();
-                    setView('grid');
+                    updateView('grid');
                   }}
                   style={{ fontSize: '20px', marginRight: '20px', marginTop: '3px', color: view === 'grid' ? '#ff7849' : 'black' }}
                 >
@@ -72,7 +83,7 @@ const EmployeeFilter = ({ initialView }) => {
                   aria-label="List View"
                   onClick={(e) => {
                     e.preventDefault();
-                    setView('list');
+                    updateView('list');
                   }}
                   style={{ fontSize: '26px', marginRight: '20px', color: view === 'list' ? '#ff7849' : 'black' }}
                 >
@@ -80,11 +91,11 @@ const EmployeeFilter = ({ initialView }) => {
                 </a>
               </div>
               <div className="ms-3 mt-3 mt-md-0">
-                <button 
+                <button
                   className="btn btn-success rounded-pill"
                   aria-label="Add Employee"
                   onClick={handleAddEmployee}
-                  style={{ backgroundColor: '#fa3644', borderColor: '#ffe3e5', borderWidth:"5px" }}
+                  style={{ backgroundColor: '#fa3644', borderColor: '#ffe3e5', borderWidth: '5px' }}
                 >
                   <i className="fa fa-plus me-2 fs-5"></i>Add Employee
                 </button>
@@ -94,6 +105,7 @@ const EmployeeFilter = ({ initialView }) => {
 
           {view === 'grid' ? <Cards /> : <EmployeeTable />}
 
+          {/* Modal for adding employee */}
           {showModal && (
             <div
               id="add_employee"
@@ -173,9 +185,7 @@ const EmployeeFilter = ({ initialView }) => {
                               <option value="">Select Department</option>
                               <option>Web Department</option>
                               <option>IT Management</option>
-                             
                               <option>Marketing</option>
-                              
                             </select>
                           </div>
                           <div className="col-12 col-md-6">
@@ -185,7 +195,14 @@ const EmployeeFilter = ({ initialView }) => {
                               <option>Web Developer</option>
                               <option>Web Designer</option>
                               <option>Android Developer</option>
-                            
+                            </select>
+                          </div>
+                          <div className="col-12 col-md-6">
+                            <label htmlFor="role" className="form-label">Role</label>
+                            <select id="role" className="form-select" required>
+                              <option value="">Select Role</option>
+                              <option>Admin</option>
+                              <option>Employee</option>
                             </select>
                           </div>
                         </div>
@@ -208,8 +225,8 @@ const EmployeeFilter = ({ initialView }) => {
                                 <tr key={category}>
                                   <td>{category}</td>
                                   {permissionActions.map((action) => (
-                                    <td key={`${category}-${action}`}>
-                                      <input type="checkbox" className="form-check-input" />
+                                    <td key={action}>
+                                      <input type="checkbox" />
                                     </td>
                                   ))}
                                 </tr>
@@ -218,12 +235,12 @@ const EmployeeFilter = ({ initialView }) => {
                           </table>
                         </div>
                       </div>
-                      <div className="submit-section">
+                      <div className="d-flex justify-content-center mt-4">
+                        <button type="submit" className="btn btn-primary me-3">
+                          Submit
+                        </button>
                         <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>
                           Cancel
-                        </button>
-                        <button type="submit" className="btn btn-primary submit-btn" style={{ marginLeft: '10px' }}>
-                          Submit
                         </button>
                       </div>
                     </form>
@@ -239,7 +256,11 @@ const EmployeeFilter = ({ initialView }) => {
 };
 
 EmployeeFilter.propTypes = {
-  initialView: PropTypes.string.isRequired,
+  initialView: PropTypes.string,
+};
+
+EmployeeFilter.defaultProps = {
+  initialView: 'list',
 };
 
 export default EmployeeFilter;

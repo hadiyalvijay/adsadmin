@@ -51,6 +51,62 @@ visibility: visible;
 .submenu-item:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
+
+.green-menu:hover{
+  background-color: lightgreen;
+}
+.green-menu:hover::before{
+  width: 100%;
+}
+
+.green-menu{
+  position: relative;
+  cursor: pointer;
+  padding: 5px 10px;
+  width: 100%;
+  display: block;
+  margin: 0;
+  transition: background-color 0.3s, padding-left 0.3s, padding-right 0.3s;
+}
+.green-menu::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: width 0.3s;
+  z-index: -1;
+}
+
+.orange-menu:hover{
+  background-color: lightsalmon;
+}
+.orange-menu:hover::before{
+  width: 100%;
+}
+
+.orange-menu{
+  position: relative;
+  cursor: pointer;
+  padding: 5px 10px;
+  width: 100%;
+  display: block;
+  margin: 0;
+  transition: background-color 0.3s, padding-left 0.3s, padding-right 0.3s;
+}
+.orange-menu::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: width 0.3s;
+  z-index: -1;
+}
 .dropdown-menu.notifications {
   max-height: 300px;
   overflow-y: auto;
@@ -91,4 +147,23 @@ visibility: visible;
 .topnav-dropdown-footer {
   padding: 10px;
   text-align: center;
+}
+.admin-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-expanded .employee-content {
+  margin-left: 275px;
+  transition: margin-left 0.3s;
+}
+
+.sidebar-collapsed .employee-content {
+  margin-left: 75px;
+  transition: margin-left 0.3s;
+}
+
+.employee-content {
+  background-color: #f3f4f6;
+  flex: 1;
 }

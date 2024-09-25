@@ -3,25 +3,19 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 
 import Employee from "./components/Employee"; // Employee component
+import Admin from "./components/Admin/admin";
 import SubSidebar from "./components/SubSidebar";
 
 const App = () => {
   return (
     <Router>
       <div className="d-flex">
-        {/* Sidebar should be present across all pages */}
 
         {/* Main content */}
         <div className="main-content" >
-        <Employee />
           <Routes>
-            {/* Home Route */}
-            <Route path="/" element={<SubSidebar />} />
-            
-            {/* Employee Route */}
-            <Route path="/sidebar" element={<Sidebar />} />
-            
-            {/* Add more routes as needed */}
+            <Route path="/" element={ <Admin />} />
+            <Route path="/employee" element={<Employee />} />
           </Routes>
         </div>
       </div>
